@@ -15,7 +15,24 @@
  *   .u-padding-vertical-small {}
  */
 
+
+
+
+
 /* stylelint-disable string-quotes */
+
+
+
+
+
+$inuit-spacing-properties: (
+  'padding': 'padding',
+  'margin': 'margin',
+) !default;
+
+
+
+
 
 $inuit-spacing-directions: (
   null: null,
@@ -27,10 +44,9 @@ $inuit-spacing-directions: (
   '-vertical': '-top' '-bottom',
 ) !default;
 
-$inuit-spacing-properties: (
-  'padding': 'padding',
-  'margin': 'margin',
-) !default;
+
+
+
 
 $inuit-spacing-sizes: (
   null: $inuit-global-spacing-unit,
@@ -41,16 +57,34 @@ $inuit-spacing-sizes: (
   '-none': 0
 ) !default;
 
-@each $property-namespace, $property in $inuit-spacing-properties {
 
-  @each $direction-namespace, $direction-rules in $inuit-spacing-directions {
 
-    @each $size-namespace, $size in $inuit-spacing-sizes {
 
-      .u-#{$property-namespace}#{$direction-namespace}#{$size-namespace} {
 
-        @each $direction in $direction-rules {
-          #{$property}#{$direction}: $size !important;
+// When using Sass-MQ, this defines the separator for the breakpoints suffix
+// in the class name. By default, we are generating the responsive suffixes
+// for the classes with a `@` symbol so you get classes like:
+// <div class="u-padding-large@tablet">
+$inuit-spacing-breakpoint-separator: \@ !default;
+
+
+
+
+
+@mixin inuit-spacing($properties: $inuit-spacing-properties, $directions: $inuit-spacing-directions, $sizes: $inuit-spacing-sizes, $breakpoint: null) {
+
+  @each $property-namespace, $property in $properties {
+
+    @each $direction-namespace, $direction-rules in $directions {
+
+      @each $size-namespace, $size in $sizes {
+
+        .u-#{$property-namespace}#{$direction-namespace}#{$size-namespace}#{$breakpoint} {
+
+          @each $direction in $direction-rules {
+            #{$property}#{$direction}: $size !important;
+          }
+
         }
 
       }
@@ -60,5 +94,91 @@ $inuit-spacing-sizes: (
   }
 
 }
+
+
+
+
+
+/**
+ * A series of spacing helper classes that you can use to give spacing.
+ * Use these in your markup:
+ *
+ * <div class="u-padding-left-large">
+ *
+ * The following will generate spacing helper classes.
+ */
+
+@include inuit-spacing();
+
+
+
+
+
+/**
+ * If we’re using Sass-MQ, automatically generate responsive helpers for each of our
+ * defined breakpoints, and give them a Responsive Suffix, e.g.:
+ *
+ * <div class="u-margin-huge@tablet">
+ */
+
+
+
+
+
+$inuit-responsive-spacing: false !default;
+
+
+
+
+
+$inuit-responsive-spacing-properties: (
+  'padding': 'padding',
+) !default;
+
+
+
+
+
+$inuit-responsive-spacing-directions: (
+  '-horizontal': '-left' '-right',
+  '-vertical': '-top' '-bottom',
+) !default;
+
+
+
+
+
+$inuit-responsive-spacing-sizes: (
+  '-small': $inuit-global-spacing-unit-small,
+  '-large': $inuit-global-spacing-unit-large,
+  '-huge': $inuit-global-spacing-unit-huge,
+  '-none': 0
+) !default;
+
+
+
+
+
+/* stylelint-disable max-nesting-depth */
+
+@if (variable-exists(mq-breakpoints) and $inuit-responsive-spacing == true) {
+  @each $inuit-bp-name, $inuit-bp-value in $mq-breakpoints {
+    @include mq($from: $inuit-bp-name) {
+      @include
+      inuit-spacing(
+        $inuit-responsive-spacing-properties,
+        $inuit-responsive-spacing-directions,
+        $inuit-responsive-spacing-sizes,
+        #{$inuit-spacing-breakpoint-separator}#{$inuit-bp-name}
+      );
+    }
+  }
+}
+
+/* stylelint-enable max-nesting-depth */
+
+
+
+
 
 /* stylelint-enable string-quotes */
