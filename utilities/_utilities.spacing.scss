@@ -19,7 +19,7 @@
 
 
 
-/* stylelint-disable string-quotes */
+/* stylelint-disable string-quotes, max-nesting-depth */
 
 
 
@@ -159,8 +159,6 @@ $inuit-responsive-spacing-sizes: (
 
 
 
-/* stylelint-disable max-nesting-depth */
-
 @if (variable-exists(mq-breakpoints) and $inuit-responsive-spacing == true) {
   @each $inuit-bp-name, $inuit-bp-value in $mq-breakpoints {
     @include mq($from: $inuit-bp-name) {
@@ -175,10 +173,8 @@ $inuit-responsive-spacing-sizes: (
   }
 }
 
-/* stylelint-enable max-nesting-depth */
 
 
 
 
-
-/* stylelint-enable string-quotes */
+/* stylelint-enable string-quotes, max-nesting-depth */
